@@ -1,3 +1,15 @@
+const humanResult = document.getElementById('human-score');
+const computerResult = document.getElementById('computer-score');
+const roundResult = document.getElementById('round-result');
+const finalResult = document.getElementById('final-result');
+
+let humanScore = 0;
+let computerScore = 0;
+
+humanResult.textContent = `Human Score: ${humanScore}`;
+computerResult.textContent = `Computer Score: ${computerScore}`;
+
+// Get Computer Choice
 function getComputerChoice() {
   let randomNum = Math.floor(Math.random() * 3);
   if (randomNum  === 0) {
@@ -8,48 +20,41 @@ function getComputerChoice() {
     return "scissors";
 }
 
-function getHumanChoice() {
-  let choice = prompt("Enter rock, paper or scissors:");
-  return choice;
-}
-
-let humanScore = 0;
-let computerScore = 0;
-
+// Play one round
 function playRound(humanChoice, computerChoice) {
   humanChoice = humanChoice.toLowerCase();
 
   if (humanChoice === computerChoice) {
-    console.log(`It is a draw.`)
+    roundResult.textContent = `It is a draw.`;
   } else if ((humanChoice === 'rock' && computerChoice === 'scissors') || (humanChoice === 'scissors' && computerChoice === 'paper') || (humanChoice ===  'paper' && computerChoice === 'rock')) {
     humanScore++;
-    console.log(`You win! ${humanChoice} beats ${computerChoice}`)
+    roundResult.textContent =`You win! ${humanChoice} beats ${computerChoice}`;
   } else {
     computerScore++;
-    console.log(`You lose! ${computerChoice} beats ${humanChoice}`)
+    roundResult.textContent = `You lose! ${computerChoice} beats ${humanChoice}`;
+  }
+
+//Scores
+humanResult.textContent = `Human Score: ${humanScore}`;
+computerResult.textContent = `Computer Score: ${computerScore}`;
+
+// Check winner
+if (humanScore === 5 || computerScore === 5) {
+  finalResult.textContent =
+  humanScore > computerScore 
+  ? "You won the game!"
+  : "Computer wins the game!";
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach(btn => btn.disabled = true);
   }
 }
 
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
-
-playRound(humanSelection, computerSelection);
-
-function playGame() {
-  for (let i = 0; i < 5; i++) {
-    console.log(`Round ${i + 1}`);
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    playRound(humanSelection, computerSelection)
-  } 
-  
-  if (humanScore > computerScore) {
-    console.log(`You win the game`);
-  } else if (computerScore > humanScore) {
-    console.log(`You lose the game`);
-  } else {
-    console.log(`It is a draw`);
-  }
-}
-
-playGame();
+//Add event listeners
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    const humanChoice = button.id;
+    const computerChoice = getComputerChoice();
+    playRound(humanChoice, computerChoice);
+  });
+});
